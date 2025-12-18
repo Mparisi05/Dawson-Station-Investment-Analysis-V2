@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawson Station Office Condo Analysis</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0f1419;
+            --bg-secondary: #1a2027;
+            --bg-card: #232b35;
+            --bg-input: #2d3640;
+            --text-primary: #f0f4f8;
+            --text-secondary: #8a9aaa;
+            --text-muted: #5c6a78;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-amber: #f59e0b;
+            --border: #2d3640;
+            --shadow: rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 16px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-blue);
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .grid-2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Mobile-specific styles */
+        @media (max-width: 480px) {
+            .container {
+                padding: 16px 12px;
+            }
+
+            header {
+                margin-bottom: 20px;
+                padding-bottom: 16px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .card {
+                padding: 16px;
+                border-radius: 10px;
+            }
+
+            .card-title {
+                font-size: 12px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .form-row-3 {
+                grid-template-columns: 1fr;
+            }
+
+            input[type="number"], input[type="text"] {
+                padding: 12px;
+                font-size: 16px; /* Prevents iOS zoom on focus */
+                min-height: 44px;
+            }
+
+            .arrow-btn {
+                width: 48px;
+                height: 48px;
+            }
+
+            .arrow-value {
+                font-size: 20px;
+                min-width: 60px;
+            }
+
+            .arrow-control {
+                gap: 12px;
+            }
+
+            .unit-table {
+                font-size: 13px;
+            }
+
+            .unit-table th, .unit-table td {
+                padding: 8px 6px;
+            }
+
+            .unit-table th {
+                font-size: 10px;
+            }
+
+            .unit-table .mono {
+                font-size: 12px;
+            }
+
+            .summary-item {
+                padding: 10px;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .summary-label {
+                font-size: 12px;
+                flex: 1 1 100%;
+            }
+
+            .summary-value {
+                font-size: 14px;
+                flex: 1 1 100%;
+                text-align: right;
+            }
+
+            .highlight-card {
+                padding: 16px;
+            }
+
+            .highlight-value {
+                font-size: 26px;
+            }
+
+            .highlight-label {
+                font-size: 11px;
+            }
+
+            .expense-item {
+                font-size: 13px;
+            }
+
+            .grid-future {
+                grid-template-columns: 1fr !important;
+            }
+
+            .section-spacer {
+                height: 16px;
+            }
+
+            .prepared-by {
+                font-size: 11px;
+                margin-top: 24px;
+            }
+        }
+
+        /* Tablet adjustments */
+        @media (max-width: 768px) {
+            .grid-future {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        @media (min-width: 600px) and (max-width: 768px) {
+            .grid-future {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .card-icon.blue { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); }
+        .card-icon.green { background: rgba(16, 185, 129, 0.15); color: var(--accent-green); }
+        .card-icon.amber { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        .unit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .unit-table th {
+            text-align: left;
+            padding: 8px 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .unit-table td {
+            padding: 10px 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .unit-table .mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        .unit-table tr.total-row td {
+            border-top: 2px solid var(--border);
+            font-weight: 600;
+        }
+
+        .unit-table .original {
+            text-decoration: line-through;
+            color: var(--text-muted);
+            font-size: 11px;
+        }
+
+        .unit-table .discount-price {
+            color: var(--accent-green);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .form-row-3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 10px 12px;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        .arrow-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .arrow-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            border: 2px solid var(--accent-blue);
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .arrow-btn:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+
+        .arrow-btn:active {
+            background: rgba(59, 130, 246, 0.3);
+            transform: scale(0.95);
+        }
+
+        .arrow-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--accent-blue);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .summary-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .summary-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .summary-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .summary-value.positive { color: var(--accent-green); }
+        .summary-value.negative { color: var(--accent-red); }
+        .summary-value.neutral { color: var(--text-primary); }
+
+        .highlight-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 24px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .highlight-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .highlight-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .highlight-sub {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .expense-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+        }
+
+        .expense-item:last-child {
+            border-bottom: none;
+        }
+
+        .expense-label {
+            color: var(--text-secondary);
+        }
+
+        .expense-value {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .section-spacer {
+            height: 24px;
+        }
+
+        .input-suffix {
+            position: relative;
+        }
+
+        .input-suffix input {
+            padding-right: 40px;
+        }
+
+        .input-suffix span {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .cash-flow-bar {
+            height: 8px;
+            background: var(--bg-input);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 8px;
+        }
+
+        .cash-flow-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .prepared-by {
+            text-align: center;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Dawson Station</div>
+            <h1>Office Condo Purchase Analysis</h1>
+            <p class="subtitle">Units 201 & 202 Investment Comparison</p>
+        </header>
+
+        <div class="grid grid-2">
+            <!-- Unit Pricing Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon blue">🏢</div>
+                    <h2 class="card-title">Unit Pricing</h2>
+                </div>
+                <table class="unit-table">
+                    <thead>
+                        <tr>
+                            <th>Unit</th>
+                            <th>Size (SF)</th>
+                            <th>$/SF</th>
+                            <th>Total Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>201</strong></td>
+                            <td class="mono">1,491</td>
+                            <td class="mono">$430.00</td>
+                            <td class="mono">
+                                <span class="original" id="unit201-original"></span><br>
+                                <span class="discount-price" id="unit201-discounted">$641,130</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>202</strong></td>
+                            <td class="mono">1,240</td>
+                            <td class="mono">$400.00</td>
+                            <td class="mono">
+                                <span class="original" id="unit202-original"></span><br>
+                                <span class="discount-price" id="unit202-discounted">$496,000</span>
+                            </td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>Total</strong></td>
+                            <td class="mono">2,731</td>
+                            <td class="mono" id="blended-psf">$416.37</td>
+                            <td class="mono">
+                                <span class="original" id="total-original"></span><br>
+                                <span class="discount-price" id="total-discounted">$1,137,130</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="section-spacer"></div>
+
+                <div class="form-group">
+                    <label class="form-label">Purchase Price Discount</label>
+                    <div class="arrow-control">
+                        <button class="arrow-btn" onclick="adjustDiscount(-0.5)">◀</button>
+                        <span class="arrow-value" id="discount-display">0%</span>
+                        <button class="arrow-btn" onclick="adjustDiscount(0.5)">▶</button>
+                    </div>
+                    <input type="hidden" id="discount" value="0">
+                </div>
+            </div>
+
+            <!-- Financing Terms Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon amber">💰</div>
+                    <h2 class="card-title">Financing Terms</h2>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Down Payment %</label>
+                        <div class="input-suffix">
+                            <input type="number" id="downpayment" value="25" min="0" max="100" step="1">
+                            <span>%</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Interest Rate</label>
+                        <div class="input-suffix">
+                            <input type="number" id="interestRate" value="6.5" min="0" max="15" step="0.125">
+                            <span>%</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Loan Term</label>
+                        <div class="input-suffix">
+                            <input type="number" id="loanTerm" value="10" min="5" max="30" step="1">
+                            <span>yrs</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amortization</label>
+                        <div class="input-suffix">
+                            <input type="number" id="amortization" value="25" min="5" max="30" step="1">
+                            <span>yrs</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-spacer"></div>
+
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Down Payment</span>
+                        <span class="summary-value neutral" id="downpayment-amount">$284,283</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Loan Amount</span>
+                        <span class="summary-value neutral" id="loan-amount">$852,848</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Monthly Debt Service</span>
+                        <span class="summary-value neutral" id="monthly-payment">$6,148</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-spacer"></div>
+
+        <div class="grid grid-2">
+            <!-- Operating Expenses Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon amber">📊</div>
+                    <h2 class="card-title">Operating Expenses</h2>
+                </div>
+                <div class="form-row form-row-3">
+                    <div class="form-group">
+                        <label class="form-label">Property Tax ($/SF/yr)</label>
+                        <div class="input-suffix">
+                            <input type="number" id="propTax" value="1.20" min="0" step="0.25">
+                            <span>$/SF</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Insurance ($/SF/yr)</label>
+                        <div class="input-suffix">
+                            <input type="number" id="insurance" value="1.00" min="0" step="0.25">
+                            <span>$/SF</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">HOA/CAM ($/SF/yr)</label>
+                        <div class="input-suffix">
+                            <input type="number" id="cam" value="2.65" min="0" step="0.25">
+                            <span>$/SF</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-spacer"></div>
+
+                <div class="expense-item">
+                    <span class="expense-label">Property Tax</span>
+                    <span class="expense-value" id="tax-annual">$12,290/yr</span>
+                </div>
+                <div class="expense-item">
+                    <span class="expense-label">Insurance</span>
+                    <span class="expense-value" id="insurance-annual">$3,414/yr</span>
+                </div>
+                <div class="expense-item">
+                    <span class="expense-label">HOA/CAM</span>
+                    <span class="expense-value" id="cam-annual">$16,386/yr</span>
+                </div>
+                <div class="expense-item" style="font-weight: 600;">
+                    <span class="expense-label">Total Operating Expenses</span>
+                    <span class="expense-value" id="total-expenses">$32,090/yr</span>
+                </div>
+                <div class="expense-item">
+                    <span class="expense-label">Monthly Expenses</span>
+                    <span class="expense-value" id="monthly-expenses">$2,674/mo</span>
+                </div>
+            </div>
+
+            <!-- Market Rent Comparison Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon green">📈</div>
+                    <h2 class="card-title">Rental Income Analysis</h2>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Market Rent ($/SF/yr)</label>
+                        <div class="input-suffix">
+                            <input type="number" id="marketRent" value="32.25" min="0" step="0.50">
+                            <span>$/SF</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Vacancy Rate</label>
+                        <div class="input-suffix">
+                            <input type="number" id="vacancy" value="0" min="0" max="25" step="1">
+                            <span>%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-spacer"></div>
+
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Gross Potential Rent</span>
+                        <span class="summary-value neutral" id="gross-rent">$76,468/yr</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Less Vacancy</span>
+                        <span class="summary-value negative" id="vacancy-loss">-$3,823/yr</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Effective Gross Income</span>
+                        <span class="summary-value positive" id="egi">$72,645/yr</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Monthly Income</span>
+                        <span class="summary-value positive" id="monthly-income">$6,054/mo</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-spacer"></div>
+
+        <!-- Cash Flow Summary -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon green">💵</div>
+                <h2 class="card-title">Monthly Cash Flow Summary</h2>
+            </div>
+            <div class="grid grid-2">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Monthly Rental Income</span>
+                        <span class="summary-value positive" id="cf-income">+$6,054</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Monthly Operating Expenses</span>
+                        <span class="summary-value negative" id="cf-expenses">-$2,674</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Monthly Debt Service</span>
+                        <span class="summary-value negative" id="cf-debt">-$6,148</span>
+                    </div>
+                </div>
+                <div class="highlight-card">
+                    <div class="highlight-label">Net Monthly Cash Flow</div>
+                    <div class="highlight-value" id="net-cashflow">-$2,768</div>
+                    <div class="highlight-sub" id="annual-cashflow">-$33,216 annually</div>
+                    <div class="cash-flow-bar">
+                        <div class="cash-flow-fill" id="cashflow-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-spacer"></div>
+
+        <!-- Key Metrics -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon blue">📐</div>
+                <h2 class="card-title">Year One Investment Metrics</h2>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Purchase Price Discount</label>
+                <div class="arrow-control">
+                    <button class="arrow-btn" onclick="adjustDiscount(-0.5)">◀</button>
+                    <span class="arrow-value" id="discount-display-2">0%</span>
+                    <button class="arrow-btn" onclick="adjustDiscount(0.5)">▶</button>
+                </div>
+            </div>
+            <div class="section-spacer"></div>
+            <div class="grid grid-2">
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Net Operating Income (NOI)</span>
+                        <span class="summary-value neutral" id="noi">$40,555/yr</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Cap Rate</span>
+                        <span class="summary-value neutral" id="caprate">3.57%</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Cash-on-Cash Return</span>
+                        <span class="summary-value" id="coc">-11.69%</span>
+                    </div>
+                </div>
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Debt Service Coverage Ratio</span>
+                        <span class="summary-value" id="dscr">0.55x</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Price per SF (After Discount)</span>
+                        <span class="summary-value neutral" id="price-psf">$416.37</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Break-Even Rent Required</span>
+                        <span class="summary-value neutral" id="breakeven-rent">$38.72/SF</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-spacer"></div>
+
+        <!-- Future Returns -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon green">📊</div>
+                <h2 class="card-title">Future Returns Projection</h2>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Annual Rent Escalation</label>
+                    <div class="input-suffix">
+                        <input type="number" id="rentEscalation" value="3.0" min="0" max="10" step="0.25">
+                        <span>%</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Annual OpEx Escalation</label>
+                    <div class="input-suffix">
+                        <input type="number" id="opexEscalation" value="2.5" min="0" max="10" step="0.25">
+                        <span>%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-spacer"></div>
+
+            <div class="grid grid-future" style="grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                <div class="highlight-card" style="padding: 16px;">
+                    <div class="highlight-label">Year 5</div>
+                    <div class="highlight-value" style="font-size: 24px;" id="yr5-cashflow">$0</div>
+                    <div class="highlight-sub">Annual Cash Flow</div>
+                    <div class="section-spacer" style="height: 8px;"></div>
+                    <div class="expense-item" style="border: none; padding: 4px 0;">
+                        <span class="expense-label" style="font-size: 12px;">NOI</span>
+                        <span class="expense-value" style="font-size: 12px;" id="yr5-noi">$0</span>
+                    </div>
+                    <div class="expense-item" style="border: none; padding: 4px 0;">
+                        <span class="expense-label" style="font-size: 12px;">Cash-on-Cash</span>
+                        <span class="expense-value" style="font-size: 12px;" id="yr5-coc">0%</span>
+                    </div>
+                </div>
+                <div class="highlight-card" style="padding: 16px;">
+                    <div class="highlight-label">Year 10</div>
+                    <div class="highlight-value" style="font-size: 24px;" id="yr10-cashflow">$0</div>
+                    <div class="highlight-sub">Annual Cash Flow</div>
+                    <div class="section-spacer" style="height: 8px;"></div>
+                    <div class="expense-item" style="border: none; padding: 4px 0;">
+                        <span class="expense-label" style="font-size: 12px;">NOI</span>
+                        <span class="expense-value" style="font-size: 12px;" id="yr10-noi">$0</span>
+                    </div>
+                    <div class="expense-item" style="border: none; padding: 4px 0;">
+                        <span class="expense-label" style="font-size: 12px;">Cash-on-Cash</span>
+                        <span class="expense-value" style="font-size: 12px;" id="yr10-coc">0%</span>
+                    </div>
+                </div>
+                <div class="highlight-card" style="padding: 16px;">
+                    <div class="highlight-label">Year 15</div>
+                    <div class="highlight-value" style="font-size: 24px;" id="yr15-cashflow">$0</div>
+                    <div class="highlight-sub">Annual Cash Flow</div>
+                    <div class="section-spacer" style="height: 8px;"></div>
+                    <div class="expense-item" style="border: none; padding: 4px 0;">
+                        <span class="expense-label" style="font-size: 12px;">NOI</span>
+                        <span class="expense-value" style="font-size: 12px;" id="yr15-noi">$0</span>
+                    </div>
+                    <div class="expense-item" style="border: none; padding: 4px 0;">
+                        <span class="expense-label" style="font-size: 12px;">Cash-on-Cash</span>
+                        <span class="expense-value" style="font-size: 12px;" id="yr15-coc">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="prepared-by">
+            Prepared by Matt • Industry Real Estate Partners
+        </div>
+    </div>
+
+    <script>
+        // Base unit data
+        const units = {
+            unit201: { sf: 1491, pricePsf: 430, baseTotal: 641130 },
+            unit202: { sf: 1240, pricePsf: 400, baseTotal: 496000 }
+        };
+        const totalSF = units.unit201.sf + units.unit202.sf;
+        const baseTotal = units.unit201.baseTotal + units.unit202.baseTotal;
+
+        // Format currency
+        function formatCurrency(num, decimals = 0) {
+            return '$' + num.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+        }
+
+        // Calculate monthly payment
+        function calculateMonthlyPayment(principal, annualRate, years) {
+            const monthlyRate = annualRate / 100 / 12;
+            const numPayments = years * 12;
+            if (monthlyRate === 0) return principal / numPayments;
+            return principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+        }
+
+        // Main calculation function
+        function calculate() {
+            // Get inputs
+            const discount = parseFloat(document.getElementById('discount').value) / 100;
+            const downPaymentPct = parseFloat(document.getElementById('downpayment').value) / 100;
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
+            const loanTerm = parseFloat(document.getElementById('loanTerm').value);
+            const amortization = parseFloat(document.getElementById('amortization').value);
+            const propTax = parseFloat(document.getElementById('propTax').value);
+            const insurance = parseFloat(document.getElementById('insurance').value);
+            const cam = parseFloat(document.getElementById('cam').value);
+            const marketRent = parseFloat(document.getElementById('marketRent').value);
+            const vacancy = parseFloat(document.getElementById('vacancy').value) / 100;
+
+            // Calculate discounted prices
+            const unit201Discounted = units.unit201.baseTotal * (1 - discount);
+            const unit202Discounted = units.unit202.baseTotal * (1 - discount);
+            const totalDiscounted = unit201Discounted + unit202Discounted;
+            const blendedPsf = totalDiscounted / totalSF;
+
+            // Update unit pricing display
+            if (discount > 0) {
+                document.getElementById('unit201-original').textContent = formatCurrency(units.unit201.baseTotal);
+                document.getElementById('unit202-original').textContent = formatCurrency(units.unit202.baseTotal);
+                document.getElementById('total-original').textContent = formatCurrency(baseTotal);
+            } else {
+                document.getElementById('unit201-original').textContent = '';
+                document.getElementById('unit202-original').textContent = '';
+                document.getElementById('total-original').textContent = '';
+            }
+            document.getElementById('unit201-discounted').textContent = formatCurrency(unit201Discounted);
+            document.getElementById('unit202-discounted').textContent = formatCurrency(unit202Discounted);
+            document.getElementById('total-discounted').textContent = formatCurrency(totalDiscounted);
+            document.getElementById('blended-psf').textContent = formatCurrency(blendedPsf, 2);
+            document.getElementById('discount-display').textContent = (discount * 100).toFixed(1) + '%';
+
+            // Calculate financing
+            const downPaymentAmount = totalDiscounted * downPaymentPct;
+            const loanAmount = totalDiscounted - downPaymentAmount;
+            const monthlyPayment = calculateMonthlyPayment(loanAmount, interestRate, amortization);
+
+            document.getElementById('downpayment-amount').textContent = formatCurrency(downPaymentAmount);
+            document.getElementById('loan-amount').textContent = formatCurrency(loanAmount);
+            document.getElementById('monthly-payment').textContent = formatCurrency(monthlyPayment);
+
+            // Calculate expenses
+            const taxAnnual = propTax * totalSF;
+            const insuranceAnnual = insurance * totalSF;
+            const camAnnual = cam * totalSF;
+            const totalExpenses = taxAnnual + insuranceAnnual + camAnnual;
+            const monthlyExpenses = totalExpenses / 12;
+
+            document.getElementById('tax-annual').textContent = formatCurrency(taxAnnual) + '/yr';
+            document.getElementById('insurance-annual').textContent = formatCurrency(insuranceAnnual) + '/yr';
+            document.getElementById('cam-annual').textContent = formatCurrency(camAnnual) + '/yr';
+            document.getElementById('total-expenses').textContent = formatCurrency(totalExpenses) + '/yr';
+            document.getElementById('monthly-expenses').textContent = formatCurrency(monthlyExpenses) + '/mo';
+
+            // Calculate rental income
+            const grossRent = marketRent * totalSF;
+            const vacancyLoss = grossRent * vacancy;
+            const egi = grossRent - vacancyLoss;
+            const monthlyIncome = egi / 12;
+
+            document.getElementById('gross-rent').textContent = formatCurrency(grossRent) + '/yr';
+            document.getElementById('vacancy-loss').textContent = '-' + formatCurrency(vacancyLoss) + '/yr';
+            document.getElementById('egi').textContent = formatCurrency(egi) + '/yr';
+            document.getElementById('monthly-income').textContent = formatCurrency(monthlyIncome) + '/mo';
+
+            // Calculate cash flow
+            const netMonthlyCashflow = monthlyIncome - monthlyExpenses - monthlyPayment;
+            const annualCashflow = netMonthlyCashflow * 12;
+
+            document.getElementById('cf-income').textContent = '+' + formatCurrency(monthlyIncome);
+            document.getElementById('cf-expenses').textContent = '-' + formatCurrency(monthlyExpenses);
+            document.getElementById('cf-debt').textContent = '-' + formatCurrency(monthlyPayment);
+
+            const cashflowEl = document.getElementById('net-cashflow');
+            cashflowEl.textContent = (netMonthlyCashflow >= 0 ? '+' : '') + formatCurrency(netMonthlyCashflow);
+            cashflowEl.style.color = netMonthlyCashflow >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+
+            document.getElementById('annual-cashflow').textContent = (annualCashflow >= 0 ? '+' : '') + formatCurrency(annualCashflow) + ' annually';
+
+            // Cash flow bar
+            const barEl = document.getElementById('cashflow-bar');
+            const maxCashflow = monthlyIncome; // Use income as max reference
+            const barPercent = Math.min(Math.max((monthlyIncome + netMonthlyCashflow) / (monthlyIncome * 2) * 100, 0), 100);
+            barEl.style.width = barPercent + '%';
+            barEl.style.background = netMonthlyCashflow >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+
+            // Calculate investment metrics
+            const noi = egi - totalExpenses;
+            const capRate = (noi / totalDiscounted) * 100;
+            const coc = (annualCashflow / downPaymentAmount) * 100;
+            const dscr = noi / (monthlyPayment * 12);
+            const breakevenRent = ((monthlyPayment * 12) + totalExpenses) / totalSF / (1 - vacancy);
+
+            document.getElementById('noi').textContent = formatCurrency(noi) + '/yr';
+            document.getElementById('caprate').textContent = capRate.toFixed(2) + '%';
+            
+            const cocEl = document.getElementById('coc');
+            cocEl.textContent = (coc >= 0 ? '' : '') + coc.toFixed(2) + '%';
+            cocEl.className = 'summary-value ' + (coc >= 0 ? 'positive' : 'negative');
+
+            const dscrEl = document.getElementById('dscr');
+            dscrEl.textContent = dscr.toFixed(2) + 'x';
+            dscrEl.className = 'summary-value ' + (dscr >= 1.25 ? 'positive' : dscr >= 1 ? 'neutral' : 'negative');
+
+            document.getElementById('price-psf').textContent = formatCurrency(blendedPsf, 2) + '/SF';
+            document.getElementById('breakeven-rent').textContent = formatCurrency(breakevenRent, 2) + '/SF';
+
+            // Sync second discount slider display
+            document.getElementById('discount-display-2').textContent = (discount * 100).toFixed(1) + '%';
+
+            // Calculate future returns
+            const rentEscalation = parseFloat(document.getElementById('rentEscalation').value) / 100;
+            const opexEscalation = parseFloat(document.getElementById('opexEscalation').value) / 100;
+            const annualDebtService = monthlyPayment * 12;
+
+            // Function to calculate future year metrics
+            function calculateFutureYear(year) {
+                const futureRent = egi * Math.pow(1 + rentEscalation, year - 1);
+                const futureExpenses = totalExpenses * Math.pow(1 + opexEscalation, year - 1);
+                const futureNoi = futureRent - futureExpenses;
+                // After loan term, no debt service
+                const futureDebtService = year <= loanTerm ? annualDebtService : 0;
+                const futureCashflow = futureNoi - futureDebtService;
+                const futureCoc = (futureCashflow / downPaymentAmount) * 100;
+                return { noi: futureNoi, cashflow: futureCashflow, coc: futureCoc };
+            }
+
+            // Year 5
+            const yr5 = calculateFutureYear(5);
+            const yr5CfEl = document.getElementById('yr5-cashflow');
+            yr5CfEl.textContent = (yr5.cashflow >= 0 ? '+' : '') + formatCurrency(yr5.cashflow);
+            yr5CfEl.style.color = yr5.cashflow >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            document.getElementById('yr5-noi').textContent = formatCurrency(yr5.noi);
+            document.getElementById('yr5-coc').textContent = yr5.coc.toFixed(1) + '%';
+
+            // Year 10
+            const yr10 = calculateFutureYear(10);
+            const yr10CfEl = document.getElementById('yr10-cashflow');
+            yr10CfEl.textContent = (yr10.cashflow >= 0 ? '+' : '') + formatCurrency(yr10.cashflow);
+            yr10CfEl.style.color = yr10.cashflow >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            document.getElementById('yr10-noi').textContent = formatCurrency(yr10.noi);
+            document.getElementById('yr10-coc').textContent = yr10.coc.toFixed(1) + '%';
+
+            // Year 15
+            const yr15 = calculateFutureYear(15);
+            const yr15CfEl = document.getElementById('yr15-cashflow');
+            yr15CfEl.textContent = (yr15.cashflow >= 0 ? '+' : '') + formatCurrency(yr15.cashflow);
+            yr15CfEl.style.color = yr15.cashflow >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+            document.getElementById('yr15-noi').textContent = formatCurrency(yr15.noi);
+            document.getElementById('yr15-coc').textContent = yr15.coc.toFixed(1) + '%';
+        }
+
+        // Adjust discount with arrow buttons
+        function adjustDiscount(delta) {
+            const input = document.getElementById('discount');
+            let currentValue = parseFloat(input.value) || 0;
+            let newValue = currentValue + delta;
+            // Clamp between 0 and 5
+            newValue = Math.max(0, Math.min(5, newValue));
+            input.value = newValue;
+            calculate();
+        }
+
+        // Add event listeners
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
